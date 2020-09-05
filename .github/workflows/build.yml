@@ -20,6 +20,17 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GHCR_TOKEN }}
 
+      - id: maintag
+        name: Main tag hack
+        run: |
+          # Strip git ref prefix from version
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+
+          # Use Docker `latest` tag convention
+          [ "$VERSION" == "main" ] && VERSION=latest
+
+          echo "::set-output name=tag::$VERSION"
+
       - name: Build docker image
         uses: docker/build-push-action@v1
         with:
@@ -28,4 +39,4 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GHCR_TOKEN }}
           repository: khwilson/r-base
-          tag_with_ref: true
+          tags: ${{ steps.maintag.outputs.tag }}
