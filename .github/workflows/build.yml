@@ -35,6 +35,7 @@ jobs:
         uses: docker/build-push-action@v1
         with:
           dockerfile: r-base/Dockerfile
+          path: r-base
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GHCR_TOKEN }}
